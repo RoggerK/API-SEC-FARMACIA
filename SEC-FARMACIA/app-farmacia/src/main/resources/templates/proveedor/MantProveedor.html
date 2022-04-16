@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head th:replace="layout::head">
+	<meta charset="UTF-8">
+</head>
+<link rel="stylesheet" th:href="@{/assets/css/sweetalert2.min.css}">
+<script th:src="@{/assets/js/lib/sweetalert2.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/Proveedor.js}"></script>
+
+
+<body>
+	<nav th:replace="Layout::menu"></nav>
+	<div class="container">
+		<div class="row mt-5 text-center text-md-start">
+			<div class="col-12 col-md-4 ">
+				<h1>Proveedor</h1>
+			</div>
+			<div class="col-12 col-md-8 d-md-flex justify-content-md-end align-items-md-center mt-2 mt-md-0">
+				<button type="button" class="btn btn-primary" id="btnagregarproveedor">Agregar Nuevo
+					Proveedor</button>
+			</div>
+		</div>
+		<hr />
+		<div class="table-responsive mt-4">
+			<table class="table table-hover align-middle" id="tblproveedor">
+				<thead>
+					<tr>
+						<th scope="col">Id</th>
+						<th scope="col">Nombre</th>
+						<th scope="col">Ruc</th>
+						<th scope="col">Teléfono</th>
+						<th scope="col">Dirección</th>
+						<th scope="col">Estado</th>
+						<th scope="col">Opciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="proveedor :${listproveedores}">
+						<td th:text="${proveedor.idproveedor}"></td>
+						<td th:text="${proveedor.nombreproveedor}"></td>
+						<td th:text="${proveedor.rucproveedor}"></td>
+						<td th:text="${proveedor.telefonoproveedor}"></td>
+						<td th:text="${proveedor.direccionproveedor}"></td>
+						<td th:text="${(proveedor.isactive == 1) ? 'Activo':'Inactivo'}"></td>
+						<td>
+							<div class="d-flex">
+								<button type="button" class="btn btn-success rounded-circle me-2 btnactualizarproveedor"
+									th:data-id="${proveedor.idproveedor}" th:data-nombre="${proveedor.nombreproveedor}"
+									th:data-ruc="${proveedor.rucproveedor}"
+									th:data-telefono="${proveedor.telefonoproveedor}"
+									th:data-direccion="${proveedor.direccionproveedor}"
+									th:data-estado="${proveedor.isactive}">
+									<img src="/assets/img/pencil.svg" alt="Actualizar" width="20" height="20">
+								</button>
+								<button type="button" class="btn btn-danger rounded-circle btnmodaleliminarproveedor"
+									th:data-id="${proveedor.idproveedor}" th:data-nombre="${proveedor.nombreproveedor}">
+									<img src="/assets/img/trash.svg" alt="Eliminar" width="20" height="20">
+								</button>
+							</div>
+						</td>
+
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+	</div>
+
+	<!-- Modal para registrar y actualizar un proveedor -->
+	<div class="modal fade" id="modalproveedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Mantenimiento de Proveedor</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="txtnomproveedor" class="form-label">Nombre(*)</label>
+						<input type="text" class="form-control" id="txtnomproveedor" required>
+					</div>
+					<div class="mb-3">
+						<label for="txtrucproveedor" class="form-label">RUC(*)</label>
+						<input type="text" class="form-control" id="txtrucproveedor" required>
+					</div>
+					<div class="mb-3">
+						<label for="txttlfproveedor" class="form-label">Teléfono(*)</label>
+						<input type="text" class="form-control" id="txttlfproveedor" required>
+					</div>
+					<div class="mb-3">
+						<label for="txtdirproveedor" class="form-label">Dirección</label>
+						<input type="text" class="form-control" id="txtdirproveedor">
+					</div>
+					<div class="mb-3">
+						<label for="cboestado" class="form-label">Estado(*)</label>
+						<select id="cboestado" class="form-select" required>
+							<option value="-1" selected>Seleccione</option>
+							<option value="1" >Activo</option>
+							<option value="0" >Inactivo</option>
+						</select>
+					</div>
+					<input type="hidden" id="hddidproveedor" value="0">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+					<button type="button" class="btn btn-primary" id="btnregistrarproveedor">Guardar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal para eliminar un proveedor -->
+	<div class="modal fade" id="modaleliminarproveedor" tabindex="-1" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Eliminar Alumno</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+
+					<label id="mensajeeliminar"></label>
+					<input type="hidden" id="hddproveedoreliminar" value="0">
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+					<button type="button" class="btn btn-danger" id="btneliminarproveedor">Eliminar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="layout::head">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script type="text/javascript" th:src="@{/assets/js/Catalogo.js}"></script>
+
+<body class="bg-primary">
+	<nav th:insert="layout::menuFarma"></nav>
+
+	<nav class="navbar navbar-expand-lg navbar-primary bg-dark"></nav>
+	
+	<br>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-12 col-sm-4 col-xl-2"
+				th:each="producto :${listproducto}">
+				<div class="card border border-warning border-5"
+					style="width: 13rem;">
+					<img th:src="${producto.imagen_producto}" class="card-img-top"
+						width="300" height="200">
+					<div class="card-body bg-warning">
+						<h5 class="card-title" th:text="${producto.nombre_producto}"></h5>
+						<h6 class="card-text" th:text="${producto.nombremarca}"></h6>
+						<span class="card-text">Precio unidad:</span> <strong
+							class="card-text fs-3" th:text="${producto.precio_unitario}"></strong>
+						<br> <br>
+						<button type="button"
+							class="btn btn-primary d-grid gap-4 col-12 mx-auto btnagregarmedicamento"
+							th:data-id="${producto.id_producto}"
+							th:data-imagen="${producto.imagen_producto}"
+							th:data-nombre="${producto.nombre_producto}"
+							th:data-prescripcion="${producto.prescripcion}"
+							th:data-presentacion="${producto.presentacion}"
+							th:data-precio="${producto.precio}"
+							th:data-preciounitario="${producto.precio_unitario}"
+							th:data-stock="${producto.stock}"
+							th:data-idcategoria="${producto.id_categoria_producto}"
+							th:data-idmarca="${producto.id_marca_producto}"
+							th:data-estado="${producto.is_active}">COMPRAR</button>
+					</div>
+				</div>
+				<br>
+			</div>
+		</div>
+	</div>
+
+	<form th:action="@{/Detalles/carrito}" method="post">
+		<div class="modal fade" id="modalAgregarProducto" tabindex="-1"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">PRODUCTO LISTO
+							PARA AGREGAR</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+
+						<div class="container">
+							<div class="row">
+								<div class="col-12 col-md-4 p-2 d-flex align-items-center">
+									<strong>NOMBRE</strong>
+								</div>
+								<div class="col-12 col-md-8 p-2">
+									<input class="form-control" type="text" id="txtnombre"
+										readonly="true" name="nombre">
+								</div>
+								<div class="col-12 col-md-8 p-2 d-flex align-items-center">
+									<strong>PRECIO UN:</strong>
+								</div>
+								<div class="col-12 col-md-4 p-2">
+									<input class="form-control" type="number" id="precioUnitario"
+										readonly="true" name="precio">
+								</div>
+								<div class="col-12 col-md-8 p-2 d-flex align-items-center">
+									<strong>CANTIDAD(*):</strong>
+								</div>
+								<div class="col-12 col-md-4 p-2">
+									<input class="form-control" type="number" id="cantidad"
+										name="cantidad">
+								</div>
+								<div class="col-12 col-md-6 p-2 d-flex align-items-center">
+									<a class="btn bg-warning text-primary" type="button"
+										onclick="calcular()">CALCULAR</a>
+								</div>
+								<div class="col-12 col-md-6 p-2">
+									<input class="form-control" type="number" id="resultado"
+										readonly="true">
+								</div>
+
+							</div>
+						</div>
+						<br> <span>(*)El campo debe ser rellenado, si desea
+							comprar.</span> <input type="hidden" id="hiddenproducto" name="id">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger"
+							data-bs-dismiss="modal">Cerrar</button>
+						<button type="submit" id="agrega"
+							class="btn btn-warning text-primary">Agregar Carrito</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+</body>
+</html>

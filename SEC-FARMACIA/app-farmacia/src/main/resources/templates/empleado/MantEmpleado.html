@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head th:replace="layout::head">
+	<meta charset="UTF-8">
+</head>
+<link rel="stylesheet" th:href="@{/assets/css/sweetalert2.min.css}">
+<script th:src="@{/assets/js/lib/sweetalert2.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/Empleado.js}"></script>
+
+<body>
+	<nav th:replace="Layout::menu"></nav>
+
+	<div class="container">
+		<div class="row mt-5 text-center text-md-start">
+			<div class="col-12 col-md-4 ">
+				<h1>Empleado</h1>
+			</div>
+			<div class="col-12 col-md-8 d-md-flex justify-content-md-end align-items-md-center mt-2 mt-md-0">
+				<button type="button" class="btn btn-primary" id="btnagregarempleado">Agregar Nuevo
+					Empleado</button>
+			</div>
+		</div>
+		<hr />
+		<div class="table-responsive mt-4">
+			<table class="table table-hover align-middle" id="tblempleado">
+				<thead>
+					<tr>
+						<th scope="col">Id</th>
+						<th scope="col">Nombre</th>
+						<th scope="col">Apellido</th>
+						<th scope="col">Sexo</th>
+						<th scope="col">Telefono</th>
+						<th scope="col">Cargo</th>
+						<th scope="col">Estado</th>
+						<th scope="col">Opciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="empleado :${listempleados}">
+						<td th:text="${empleado.idempleado}"></td>
+						<td th:text="${empleado.nombreempleado}"></td>
+						<td th:text="${empleado.apellidoempleado}"></td>
+						<td th:text="${(empleado.sexoempleado == 'M' ) ? 'Masculino'  : 'Femenino' }"></td>
+						<td th:text="${empleado.telefonoempleado}"></td>
+						<td th:text="${empleado.nombrecargo}"></td>
+						<td th:text="${ (empleado.isactive == 1) ? 'Activo' : 'Inactivo' }"></td>
+						<td>
+							<div class="d-flex">
+								<button type="button" class="btn btn-success rounded-circle me-2 btnactualizarempleado"
+									th:data-id="${empleado.idempleado}" 
+									th:data-nombre="${empleado.nombreempleado}"
+									th:data-apellido="${empleado.apellidoempleado}"
+									th:data-sexo="${empleado.sexoempleado}"
+									th:data-telefono="${empleado.telefonoempleado}"
+									th:data-idcargo="${empleado.idcargoempleado}"
+									th:data-estado="${empleado.isactive}"
+								>
+									<img th:src="@{/assets/img/pencil.svg}" alt="Actualizar" width="20" height="20">
+								</button>
+								<button type="button" class="btn btn-danger rounded-circle btnmodaleliminarempleado"
+									th:data-id="${empleado.idempleado}" th:data-nombre="${empleado.nombreempleado}">
+									<img th:src="@{/assets/img/trash.svg}" alt="Eliminar" width="20" height="20">
+								</button>
+							</div>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+
+		</div>
+
+	</div>
+
+
+	<!-- Modal para registrar y actualizar un empleado -->
+	<div class="modal fade" id="modalempleado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Mantenimiento de Empleado</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="txtnomempleado" class="form-label">Nombre(*)</label>
+						<input type="text" class="form-control" id="txtnomempleado">
+					</div>
+					<div class="mb-3">
+						<label for="txtapeempleado" class="form-label">Apellido(*)</label>
+						<input type="text" class="form-control" id="txtapeempleado">
+					</div>
+					<div class="mb-3">
+						<label for="cbosexo" class="form-label">Sexo(*)</label>
+						<select id="cbosexo" class="form-select" required>
+							<option value="N" selected>Seleccione</option>
+							<option value="M" selected>Masculino</option>
+							<option value="F" >Femenino</option>
+						</select>
+					</div>
+
+					
+					<div class="mb-3">
+						<label for="txttelefono" class="form-label">Telefono(*)</label>
+						<input type="text" class="form-control" id="txttelefono" maxlength="9">
+					</div>
+
+					<div class="mb-3">
+						<label for="cbocargo" class="form-label">Cargo(*)</label>
+						<select id="cbocargo" class="form-select" required>
+							<option value="0" selected>Seleccione</option>
+							<option th:each="cargo : ${listcargo} "
+								th:text="${cargo.nombrecargo}"
+								th:value="${cargo.idcargo}"></option>
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label for="cboestado" class="form-label">Estado(*)</label>
+						<select id="cboestado" class="form-select" required>
+							<option value="-1" selected>Seleccione</option>
+							<option value="1" >Activo</option>
+							<option value="0" >Inactivo</option>
+						</select>
+					</div>
+					<input type="hidden" id="hddidempleado" value="0">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+					<button type="button" class="btn btn-primary" id="btnregistrarempleado">Guardar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal para eliminar un empleado -->
+	<div class="modal fade" id="modaleliminarempleado" tabindex="-1" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Eliminar Empleado</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+
+					<label id="mensajeeliminar"></label>
+					<input type="hidden" id="hddempleadoeliminar" value="0">
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+					<button type="button" class="btn btn-danger" id="btneliminarempleado">Eliminar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

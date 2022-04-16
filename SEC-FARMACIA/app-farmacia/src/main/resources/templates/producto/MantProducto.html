@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="layout::head">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<link rel="stylesheet" th:href="@{/assets/css/sweetalert2.min.css}">
+<script th:src="@{/assets/js/lib/sweetalert2.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/Producto.js}"></script>
+
+<body>
+	<nav th:replace="layout::menu"></nav>
+	<div class="container">
+		<div class="row mt-5 text-center text-md-start">
+			<div class="col-12 col-md-4 ">
+				<h1>Producto</h1>
+			</div>
+			<div class="col-12 col-md-8 d-md-flex justify-content-md-end align-items-md-center mt-2 mt-md-0">
+				<button type="button" class="btn btn-primary" id="agregarProducto">Agregar Nuevo
+					Producto</button>
+			</div>
+		</div>
+		<hr />
+
+		<div class="table-responsive mt-4">
+			<table class="table table-hover align-middle" id="tblProducto">
+				<thead>
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">Imagen</th>
+						<th scope="col">Nombre Producto</th>
+						<th scope="col">Prescripcion</th>
+						<th scope="col">Presentacion</th>
+						<th scope="col">Precio</th>
+						<th scope="col">Precio Unitario</th>
+						<th scope="col">Stock</th>
+						<th scope="col">Categoria</th>
+						<th scope="col">Marca</th>
+						<th scope="col">Estado</th>
+						<th scope="col">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="producto : ${listproductos}">
+						<td th:text="${producto.id_producto}"></td>
+						<td><img th:src="${producto.imagen_producto}" alt="Imagen" width="100"></td>
+						<td th:text="${producto.nombre_producto}"></td>
+						<td th:text="${producto.prescripcion}"></td>
+						<td th:text="${producto.presentacion}"></td>
+						<td th:text="${producto.precio}"></td>
+						<td th:text="${producto.precio_unitario}"></td>
+						<td th:text="${producto.stock}"></td>
+						<td th:text="${producto.nombrecategoria}"></td>
+						<td th:text="${producto.nombremarca}"></td>
+						<td th:text="${(producto.is_active == 1 ) ? 'Activo' : 'Inactivo' }"></td>
+						<td>
+							<div class="d-flex">
+								<button type="button" class="btn btn-success rounded-circle me-2 actualizarProducto"
+								th:data-id="${producto.id_producto}" 
+								th:data-imagen="${producto.imagen_producto}"
+								th:data-nombre="${producto.nombre_producto}"
+								th:data-prescripcion="${producto.prescripcion}"
+								th:data-presentacion="${producto.presentacion}"
+								th:data-precio="${producto.precio}"
+								th:data-preciounitario="${producto.precio_unitario}"
+								th:data-stock="${producto.stock}"
+								th:data-idcategoria="${producto.id_categoria_producto}"
+								th:data-idmarca="${producto.id_marca_producto}"
+								th:data-estado="${producto.is_active}"
+								> <img
+										src="/assets/img/pencil.svg" alt="Actualizar" width="20" height="20">
+								</button> 
+								<button type="button" class="btn btn-danger rounded-circle eliminarProducto"
+									th:data-id="${producto.id_producto}" th:data-nombre="${producto.nombre_producto}"
+								> <img src="/assets/img/trash.svg"
+										alt="Eliminar" width="20" height="20">
+								</button>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+    <!-- Modal para registrar y actualizar un proveedor -->
+	<div class="modal fade" id="modalProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Mantenimiento de Productos</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+                    <div class="mb-3">
+						<label for="txtimagen" class="form-label">Imagen</label> 
+						<input type="text" class="form-control" id="txtimagen" placeholder="Ingresa la URL de la Imagen">
+					</div>
+
+					<div class="mb-3">
+						<label for="txtnombre" class="form-label">Nombre(*)</label> 
+						<input type="text" class="form-control" id="txtnombre" placeholder="Ingresa un nombre">
+					</div>
+
+                    <div class="row">
+                        <!-- <div class="col-12 col-md-6"></div> -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <label for="cboprescripcion" class="form-label">Prescripcion</label> 
+                            <select class="form-select" aria-label="Selecciona una prescripcion" id="cboprescripcion">
+                                  <option value="VENTA LIBRE" selected>VENTA LIBRE</option>
+                                  <option value="PRESENTA RECETA">PRESENTA RECETA</option>
+                            </select>
+                        </div>
+    
+                        <div class="col-12 col-md-6 mb-3">
+                            <label for="cbopresentacion" class="form-label">Presentacion</label> 
+                            <select class="form-select" aria-label="Selecciona una presentacion" id="cbopresentacion">
+                              <option value="POTE" selected>Pote</option>
+                              <option value="CAJA">Caja</option>
+                              <option value="FRASCO">Frasco</option>
+                              <option value="TUBO">Tubo</option>
+                              <option value="SOBRE">Sobre</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-4 mb-3">
+                            <label for="precio" class="form-label">Precio(*)</label> 
+                            <input type="text" class="form-control" id="precio" placeholder="0.0">
+                        </div>
+    
+                        <div class="col-12 col-md-4 mb-3">
+                            <label for="precioUnitario" class="form-label">Precio Unitario(*)</label>
+                            <input type="text" class="form-control" id="precioUnitario" placeholder="0.0" >
+                        </div>
+    
+                        <div class="col-12 col-md-4 mb-3">
+                            <label for="stock" class="form-label">Stock(*)</label> 
+                            <input type="number" class="form-control" id="stock" placeholder="0">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-4 mb-3">
+                            <label for="cbocategoria" class="form-label">Categoria(*)</label>
+                            <select id="cbocategoria" class="form-select" required>
+                                <option value="0" selected>Seleccione</option>
+                                <option th:each="categoria : ${listcategoria} "
+                                    th:text="${categoria.nombrecategoria}"
+                                    th:value="${categoria.idcategoria}"></option>
+                            </select>
+                        </div>
+    
+                        <div class="col-12 col-md-4 mb-3">
+                            <label for="cbomarca" class="form-label">Marca(*)</label>
+                            <select id="cbomarca" class="form-select" required>
+                                <option value="0" selected>Seleccione</option>
+                                <option th:each="marca : ${listmarca} "
+                                    th:text="${marca.nombremarca}"
+                                    th:value="${marca.idmarca}"></option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-12 col-md-4 mb-3">
+                            <label for="cboestado" class="form-label">Estado(*)</label>
+                            <select id="cboestado" class="form-select" required>
+                                <option value="-1" selected>Seleccione</option>
+                                <option value="1" >Activo</option>
+                                <option value="0" >Inactivo</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+					<input type="hidden" id="hiddenproducto" value="0">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+					<button type="button" class="btn btn-primary" id="registrarProducto">Guardar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>
